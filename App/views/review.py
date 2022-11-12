@@ -20,8 +20,10 @@ def create_review_action():
     review = create_review(
         user_id=data["user_id"], student_id=data["student_id"], text=data["text"]
     )
+
     if review:
         return jsonify(review.to_json()), 201
+
     return jsonify({"error": "review not created"}), 400
 
 
@@ -44,25 +46,15 @@ def get_review_action(review_id):
 
 
 # Upvotes post given post id and user id
-@review_views.route("/api/reviews/<int:review_id>/upvote", methods=["PUT"])
+@review_views.route("/api/reviews/<int:review_id>/vote/<string:vote>", methods=["PUT"])
 @jwt_required()
-def upvote_review_action(review_id):
+def upvote_review_action(review_id,vote):
     review = get_review(review_id)
-    if review:
-        review.vote(current_identity.id, "up")
+    if review :
+        review.vote(current_identity.id, vote)
         return jsonify(review.to_json()), 200
     return jsonify({"error": "review not found"}), 404
 
-
-# Downvotes post given post id and user id
-@review_views.route("/api/reviews/<int:review_id>/downvote", methods=["PUT"])
-@jwt_required()
-def downvote_review_action(review_id):
-    review = get_review(review_id)
-    if review:
-        review.vote(current_identity.id, "down")
-        return jsonify(review.to_json()), 200
-    return jsonify({"error": "review not found"}), 404
 
 
 # Updates post given post id and new text

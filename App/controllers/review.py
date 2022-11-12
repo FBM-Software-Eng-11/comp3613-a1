@@ -16,7 +16,7 @@ def create_review(student_id, user_id, text):
         db.session.add(user)
         db.session.add(student)
         db.session.commit()
-        return review
+        return review 
     return None
 
 
