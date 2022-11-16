@@ -10,7 +10,9 @@ class Review(db.Model):
     date = db.Column(db.Date, nullable=False)
     reviewType = db.Column(db.String(1000), nullable=False)
     text = db.Column(db.String(1000), nullable=False)
-    votes = db.Column(MutableDict.as_mutable(JSON), nullable=False)
+    votes = db.relationship(
+        "Votes", backref="review", lazy=True, cascade="all, delete-orphan"
+    )
 
     def __init__(self, user_id, student_id, text):
         self.user_id = user_id

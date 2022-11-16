@@ -7,10 +7,6 @@ class Votes(db.Model):
     date = db.Column(db.Date, nullable=False)
     voteType = db.Column(db.String(1000), nullable=False)
 
-    review = db.relationship(
-        "Review", backref="review", lazy=True, cascade="all, delete-orphan"
-    )
-
     def __init__(self, review_id):
         self.review_id = review_id
         self.upvotes = 0
