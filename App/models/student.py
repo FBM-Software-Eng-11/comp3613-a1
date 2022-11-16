@@ -18,7 +18,7 @@ class Student(db.Model):
     def get_karma(self):
         karma = 0
         for review in self.reviews:
-            karma += review.get_karma()
+            karma += review.get_review_karma()
         return karma
 
     def to_json(self):

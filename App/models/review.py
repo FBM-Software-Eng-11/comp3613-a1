@@ -7,6 +7,8 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    reviewType = db.Column(db.String(1000), nullable=False)
     text = db.Column(db.String(1000), nullable=False)
     votes = db.Column(MutableDict.as_mutable(JSON), nullable=False)
 
@@ -29,17 +31,25 @@ class Review(db.Model):
             }
         )
 
-    def get_num_upvotes(self):
-        return self.votes["num_upvotes"]
+    def get_review_karma(self):
 
-    def get_num_downvotes(self):
-        return self.votes["num_downvotes"]
-
-    def get_karma(self):
-        return self.get_num_upvotes() - self.get_num_downvotes()
-
-    def get_all_votes(self):
-        return self.votes
+        karma = 0
+    
+        if self.reviewType == "positive":
+            karma += 20
+            for vote in self.votes:
+                if vote.voteType == "up" :
+                    karma += 1
+                else:
+                    karma -=1
+        else:
+            karma -= 10
+            for vote in self.votes:
+                if vote.voteType == "up" :
+                    karma -= 1
+                else:
+                    karma +=1
+        return karma
 
     def to_json(self):
         return {
