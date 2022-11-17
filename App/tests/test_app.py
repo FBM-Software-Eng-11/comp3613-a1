@@ -207,3 +207,36 @@ class StudentIntegrationTests(unittest.TestCase):
         sid = student.id
         delete_student(sid)
         assert get_student(sid) is None
+
+# Integration tests for Review model
+class ReviewIntegrationTests(unittest.TestCase):
+    def test_create_review(self):
+        test_review = create_review(1, 1, "good", "positive")
+        review = get_review(test_review.id)
+        assert test_review.text == review.text and test_review.id == 1
+
+    def test_update_review_text(self):
+        test_review = create_review(1, 1, "good", "positive")
+        update_review(test_review.id, "great student", "positive")
+        assert get_review(test_review.id).text == "great student" and get_review(test_review.id).get_review_karma() == 20
+
+    def test_update_review_reviewType(self):
+        test_review = create_review(1, 1, "good", "positive")
+        update_review(test_review.id, "great student", "negative")
+        assert get_review(test_review.id).reviewType == "negative" and get_review(test_review.id).get_review_karma() == -10
+
+    def test_delete_review(self):
+        test_review = create_review(1, 1, "good", "postive")
+        rid = test_review.id
+        delete_review(rid)
+        assert get_review(rid) is None
+
+    def test_get_review_json(self):
+        test_review = create_review(1, 1, "good","positive")
+        review_json = get_review_json(test_review.id)
+        assert review_json == test_review.to_json()
+
+    def test_get_all_reviews_json(self):
+        reviews = get_all_reviews()
+        reviews_json = get_all_reviews_json()
+        assert reviews_json == [review.to_json() for review in reviews]

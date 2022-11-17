@@ -4,11 +4,11 @@ from App.database import db
 
 # Creates a review given a student id, user id and review text
 # Returns the review object if successful, None otherwise
-def create_review(student_id, user_id, text):
+def create_review(student_id, user_id, text, reviewType):
     user = User.query.get(user_id)
     student = Student.query.get(student_id)
     if user and student:
-        review = Review(user_id, student_id, text)
+        review = Review(user_id, student_id, text, reviewType)
         db.session.add(review)
         db.session.commit()
         user.reviews.append(review)
@@ -22,10 +22,11 @@ def create_review(student_id, user_id, text):
 
 # Updates a review given a review id and updated review text
 # Returns the review object as a json if successful, None otherwise
-def update_review(id, text):
+def update_review(id, text, reviewType):
     review = Review.query.get(id)
     if review:
         review.text = text
+        review.reviewType = reviewType
         db.session.add(review)
         db.session.commit()
         return review
@@ -117,8 +118,8 @@ def get_review_votes(id):
 
 
 # Gets a review's karma given the review id
-def get_review_karma(id):
+'''def get_review_karma(id):
     review = Review.query.get(id)
     if review:
         return review.get_karma()
-    return None
+    return None'''
