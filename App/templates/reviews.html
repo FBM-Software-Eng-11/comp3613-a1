@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %} Reviews{% endblock %}
+{% block page %} Reviews{% endblock %}
+
+{{ super() }}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <form class="col s12 m8 offset-m2 card-panel" method="POST" action="/reviews">
+            
+            {{ form.csrf_token }}
+
+            <div class="input-field col s12 m8 offset-m2"> 
+                {{ form.studentId(size=200, class="validate materialize-textarea") }}
+                {{ form.studentId.label }}
+            </div>
+
+            <div class="input-field col s12 m8 offset-m2"> 
+              {{ form.review(size=200, class="validate materialize-textarea") }}
+              {{ form.review.label }}
+            </div>
+
+            <div class="input-field col s12 m8 offset-m2">
+              {{form.submit}}
+            </div> 
+        </form>
+    </div>
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <td>Review</td><td>karma</td><td>Actions</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for review in reviews %}
+            <tr>
+              <td>{{review.review}}</td>
+              <td>
+                {{review.karma}}
+              </td>
+              <td>
+                <a class="waves-effect waves-light btn" href="/editTodo/{{review.id}}">EDIT</a>
+              </td>
+            </tr>
+          {% endfor %}
+        <tbody>
+      </table>
+    </div>
+  </div>
+        
+  </div>
+
+{% endblock %}
