@@ -79,3 +79,131 @@ class StudentUnitTests(unittest.TestCase):
                 "programme": "Computer Science",
             },
         )
+
+# Unit tests for Review model
+class ReviewUnitTests(unittest.TestCase):
+    def test_new_review(self):
+        review = Review(1,1,"good student", "positive")
+        assert review.student_id == 1 and review.user_id == 1 and review.text == "good student" and review.reviewType == "positive"
+
+    def test_review_to_json(self):
+            review = Review(1, 1, "good","positive")
+            review_json = review.to_json()
+            self.assertDictEqual(
+                review_json,
+                {
+                    "id": None,
+                    "user_id": 1,
+                    "student_id": 1,
+                    "time": review.get_time(),
+                    "review type": "positive",
+                    "text": "good",
+                    "karma": 20,
+                    "num_upvotes": 0,
+                    "num_downvotes": 0,
+                    
+                },
+             )
+
+# Unit tests for Votes Model
+class VotesUnitTests(unittest.TestCase):
+    def test_new_vote(self):
+        review = Review(1,1,"good student", "positive")
+        vote = Votes(1, 1, "up")
+        assert vote.review_id == 1 and vote.voteType == "up" and vote.voter_id == 1
+
+
+
+"""
+    Integration Tests
+"""
+
+# This fixture creates an empty database for the test and deletes it after the test
+# scope="class" would execute the fixture once and resued for all methods in the class
+@pytest.fixture(autouse=True, scope="module")
+def empty_db():
+    app.config.update({"TESTING": True, "SQLALCHEMY_DATABASE_URI": "sqlite:///test.db"})
+    create_db(app)
+    yield app.test_client()
+    os.unlink(os.getcwd() + "/App/test.db")
+
+
+# Integration tests for User model
+class UsersIntegrationTests(unittest.TestCase):
+    def test_authenticate(self):
+        user = create_user("bob", "bobpass")
+        assert authenticate("bob", "bobpass") is not None
+
+    def test_create_admin(self):
+        test_admin = create_user("rick1", "rickpass", 2)
+        admin = get_user_by_username("rick1")
+        assert test_admin.username == admin.username and test_admin.is_admin()
+
+    def test_create_user(self):
+        test_user = create_user("john", "johnpass", 1)
+        user = get_user_by_username("john")
+        assert user.username == "john" and not user.is_admin()
+
+    def test_get_user(self):
+        test_user = create_user("johnny", "johnpass", 1)
+        user = get_user(test_user.id)
+        assert test_user.username == user.username
+
+    def test_get_all_users_json(self):
+        users = get_all_users()
+        users_json = get_all_users_json()
+        assert users_json == [user.to_json() for user in users]
+
+    def test_update_user(self):
+        user = create_user("danny", "johnpass", 1)
+        update_user(user.id, "daniel")
+        assert get_user(user.id).username == "daniel"
+
+    def test_delete_user(self):
+        user = create_user("bobby", "bobbypass", 1)
+        uid = user.id
+        delete_user(uid)
+        assert get_user(uid) is None
+
+    # Integration tests for Student model
+class StudentIntegrationTests(unittest.TestCase):
+    def test_create_student(self):
+        test_student = create_student("bob", "fst", "cs")
+        student = get_student(test_student.id)
+        assert test_student.name == student.name
+
+    def test_get_students_by_name(self):
+        students = get_students_by_name("bob")
+        assert students[0].name == "bob"
+
+    def test_get_all_students_json(self):
+        students = get_all_students()
+        students_json = get_all_students_json()
+        assert students_json == [student.to_json() for student in students]
+
+    # tests updating a student's name, programme and/or faculty
+    def test_update_student(self):
+        with self.subTest("Update name"):
+            student = create_student("bob", "fst", "cs")
+            update_student(student.id, "bobby")
+            assert get_student(student.id).name == "bobby"
+        with self.subTest("Update programme"):
+            student = create_student("bob", "fst", "cs")
+            update_student(student.id, programme="it")
+            assert get_student(student.id).programme == "it"
+        with self.subTest("Update faculty"):
+            student = create_student("bob", "fst", "cs")
+            update_student(student.id, faculty="fss")
+            assert get_student(student.id).faculty == "fss"
+        with self.subTest("Update all"):
+            student = create_student("bob", "fst", "cs")
+            update_student(student.id, "bobby", "it", "fss")
+            assert get_student(student.id).name == "bobby"
+            assert get_student(student.id).programme == "it"
+            assert get_student(student.id).faculty == "fss"
+
+    def test_delete_student(self):
+        student = create_student("bob", "fst", "cs")
+        sid = student.id
+        delete_student(sid)
+        assert get_student(sid) is None

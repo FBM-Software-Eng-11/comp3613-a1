@@ -15,10 +15,11 @@ class Review(db.Model):
         "Votes", backref="review", lazy=True, cascade="all, delete-orphan"
     )
 
-    def __init__(self, user_id, student_id, text):
+    def __init__(self, user_id, student_id, text, reviewType):
         self.user_id = user_id
         self.student_id = student_id
         self.text = text
+        self.reviewType = reviewType
         self.date = datetime.now()
 
     '''def vote(self, user_id, vote):
@@ -33,11 +34,11 @@ class Review(db.Model):
                 )
             }
         )'''
-
+    def get_time(self):
+        return self.date
+     
     def get_review_karma(self):
-
         karma = 0
-    
         if self.reviewType == "positive":
             karma += 20
             for vote in self.votes:
@@ -54,14 +55,30 @@ class Review(db.Model):
                     karma +=1
         return karma
 
+    def get_num_upvotes(self):
+        upvotes = 0
+        for vote in self.votes:
+            if vote.voteType == "up":
+                upvotes += 1
+        return upvotes
+
+    def get_num_downvotes(self):
+        downvotes = 0
+        for vote in self.votes:
+            if vote.voteType == "down":
+                downvotes += 1
+        return downvotes
+    
+
     def to_json(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
             "student_id": self.student_id,
             "time": self.date,
+            "review type": self.reviewType,
             "text": self.text,
-            "karma": self.get_karma(),
+            "karma": self.get_review_karma(),
             "num_upvotes": self.get_num_upvotes(),
             "num_downvotes": self.get_num_downvotes(),
         }
