@@ -3,38 +3,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from App.main import create_app
 from App.database import create_db
-from App.models import User, Student, Review
-from App.controllers.auth import authenticate
-from App.controllers.user import (
-    create_user,
-    get_all_users,
-    get_all_users_json,
-    get_user,
-    get_user_by_username,
-    update_user,
-    delete_user,
-)
-from App.controllers.student import (
-    create_student,
-    get_students_by_name,
-    get_student,
-    get_all_students,
-    get_all_students_json,
-    update_student,
-    delete_student,
-)
 
-from App.controllers.review import (
-    create_review,
-    update_review,
-    delete_review,
-    get_review,
-    get_review_json,
-    get_all_reviews,
-    get_all_reviews_json,
-    upvote_review,
-    downvote_review,
-)
+from App.models import *
+from App.controllers import *
 
 from wsgi import app
 

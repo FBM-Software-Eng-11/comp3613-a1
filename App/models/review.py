@@ -1,6 +1,7 @@
 from App.database import db
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
+from datetime import datetime
 
 
 class Review(db.Model):
@@ -18,9 +19,9 @@ class Review(db.Model):
         self.user_id = user_id
         self.student_id = student_id
         self.text = text
-        self.votes = {"num_upvotes": 0, "num_downvotes": 0}
+        self.date = datetime.now()
 
-    def vote(self, user_id, vote):
+    '''def vote(self, user_id, vote):
         self.votes.update({user_id: vote})
         self.votes.update(
             {"num_upvotes": len([vote for vote in self.votes.values() if vote == "up"])}
@@ -31,7 +32,7 @@ class Review(db.Model):
                     [vote for vote in self.votes.values() if vote == "down"]
                 )
             }
-        )
+        )'''
 
     def get_review_karma(self):
 
@@ -58,6 +59,7 @@ class Review(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "student_id": self.student_id,
+            "time": self.date,
             "text": self.text,
             "karma": self.get_karma(),
             "num_upvotes": self.get_num_upvotes(),

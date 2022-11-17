@@ -15,6 +15,9 @@ class User(db.Model):
     reviews = db.relationship(
         "Review", backref="user", lazy=True, cascade="all, delete-orphan"
     )
+    votes = db.relationship(
+        "Votes", backref="user", lazy=True, cascade="all, delete-orphan"
+    )
 
     def __init__(self, username, password, access=ACCESS["user"]):
         self.username = username
