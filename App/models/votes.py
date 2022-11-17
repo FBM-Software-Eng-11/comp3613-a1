@@ -3,8 +3,8 @@ from datetime import datetime
 
 class Votes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    review_id = db.Column(db.Integer, db.ForeignKey("review.id"), nullable=False, unique=True)
-    voter_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False, unique=True)
+    review_id = db.Column(db.Integer, db.ForeignKey("review.id"), nullable=False, unique=False)
+    voter_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False, unique=False)
     date = db.Column(db.Date, nullable=False)
     voteType = db.Column(db.String(1000), nullable=False)
 

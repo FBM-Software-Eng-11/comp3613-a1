@@ -181,6 +181,8 @@ class StudentIntegrationTests(unittest.TestCase):
         students_json = get_all_students_json()
         assert students_json == [student.to_json() for student in students]
 
+  
+
     # tests updating a student's name, programme and/or faculty
     def test_update_student(self):
         with self.subTest("Update name"):
@@ -240,3 +242,38 @@ class ReviewIntegrationTests(unittest.TestCase):
         reviews = get_all_reviews()
         reviews_json = get_all_reviews_json()
         assert reviews_json == [review.to_json() for review in reviews]
+
+    def test_review_get_karma(self):
+        with self.subTest("No votes"):
+            review = Review(1, 1, "good", "positive")
+            self.assertEqual(get_review(1).get_review_karma(), 20)
+
+        with self.subTest("One upvote"):
+            test_review = create_review(1, 1, "good", "positive")
+            new_vote = create_vote(1,1,"up")
+            self.assertEqual(get_review(1).get_review_karma(), 21)
+
+        with self.subTest("One downvote"):
+            test_review = create_review(1, 1, "good", "positive")
+            new_vote = create_vote(2,1,"down")
+            self.assertEqual(get_review(2).get_review_karma(), 19)
+
+    def test_review_get_votes(self):
+        with self.subTest("One Upvote"):
+            self.assertEqual(get_review(1).get_num_upvotes(), 1)
+
+        with self.subTest("One downvote"):
+            self.assertEqual(get_review(2).get_num_downvotes(), 1)
+    
+
+class VotesIntegrationTests(unittest.TestCase):
+    def test_create_vote(self):
+        test_review = create_review(1, 1, "good", "positive")
+        new_vote = create_vote(3,1,"down")
+        assert new_vote.id == 3 and get_review(3).get_review_karma()==19
+
+    def test_get_student_karma(self):
+        create_student("john", "IT", "fst")
+        review = create_review(2, 1, "good boy", "positive")
+        vote = create_vote(review.id, 1, "up")
+        assert get_student(2).get_karma() == 21
