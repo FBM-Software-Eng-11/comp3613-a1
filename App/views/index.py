@@ -42,3 +42,10 @@ def signup_page():
       return redirect(const_url+"/login")
   flash('Error invalid input!')
   return  redirect(const_url+"/signup")
+
+
+@index_views.route('/reviews', methods=['GET', 'POST'])
+def reviews_page():
+
+  if request.method == 'GET':
+    return render_template('reviews_page.html')
