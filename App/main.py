@@ -1,6 +1,7 @@
 import os
 from flask import Flask
-from flask_login import LoginManager, current_user
+from flask_jwt import JWT, jwt_required, current_identity
+from flask_login import LoginManager, current_user, login_user, login_required
 from flask_uploads import DOCUMENTS, IMAGES, TEXT, UploadSet, configure_uploads
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -13,6 +14,8 @@ from App.database import create_db
 from App.controllers import setup_jwt
 
 from App.views import user_views, index_views, review_views, student_views
+
+from App.models import *
 
 # New views must be imported and added to this list
 
@@ -44,6 +47,12 @@ def loadConfig(app, config):
     for key, value in config.items():
         app.config[key] = config[key]
 
+''' Begin Flask Login Functions '''
+login_manager = LoginManager()
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+''' End Flask Login Functions '''
 
 def create_app(config={}):
     app = Flask(__name__, static_url_path="/static")
@@ -55,8 +64,13 @@ def create_app(config={}):
     app.config["UPLOADED_PHOTOS_DEST"] = "App/uploads"
     photos = UploadSet("photos", TEXT + DOCUMENTS + IMAGES)
     configure_uploads(app, photos)
+    login_manager.init_app(app)
     add_views(app, views)
     create_db(app)
     setup_jwt(app)
     app.app_context().push()
     return app
+
+app = create_app()
+
+

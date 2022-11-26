@@ -1,16 +1,13 @@
-from flask import Blueprint, render_template, jsonify, request, send_from_directory
+from flask import Blueprint, render_template, jsonify, request, send_from_directory,flash,redirect
 from flask_jwt import jwt_required, current_identity
+from flask_login import LoginManager, current_user, login_user, login_required, login_manager, login_required
+from .forms import SignUp, LogIn
 
 
-from App.controllers import (
-    create_user,
-    get_user,
-    get_all_users,
-    get_all_users_json,
-    get_users_by_access,
-    delete_user,
-    get_user_by_username,
-)
+from App.controllers import *
+
+
+const_url = "https://8080-fbmsoftwaree-comp3613a1-moaazqix6k3.ws-us77.gitpod.io"
 
 user_views = Blueprint("user_views", __name__, template_folder="../templates")
 
@@ -20,6 +17,25 @@ def get_user_page():
     users = get_all_users()
     users_list = [ user.to_json() for user in users ] 
     return jsonify({ "num_users": len(users_list), "users": users_list })
+
+@user_views.route('/auth',methods=['POST'])
+def logsIn_user():
+    data = request.form
+    user = authenticate(data['username'], data['password'])
+    if user == None:
+        flash('Wrong Username or Password!')
+        form = LogIn()
+        return render_template("login.html", form=form)
+    login_user(user, remember=True)
+    return redirect(const_url+'/identify')
+
+
+@user_views.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash ('You have been logged out')
+    return redirect(const_url+'/login')
 
 @user_views.route("/identify", methods=["GET"])
 @jwt_required()
