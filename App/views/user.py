@@ -15,8 +15,8 @@ user_views = Blueprint("user_views", __name__, template_folder="../templates")
 @user_views.route("/users", methods=["GET"])
 def get_user_page():
     users = get_all_users()
-    users_list = [ user.to_json() for user in users ] 
-    return jsonify({ "num_users": len(users_list), "users": users_list })
+    user = current_user
+    return render_template("users.html", user = user)
 
 #loggs in the user
 @user_views.route('/auth',methods=['POST'])
