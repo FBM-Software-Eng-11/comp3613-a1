@@ -7,7 +7,7 @@
 {% block content %}
    <div class="row">
       
-        <form class="col s12 m8 offset-m2" method="POST" action="/login">
+        <form class="col s12 m8 offset-m2" method="POST" action="/auth">
             {{ form.csrf_token }}
 
             <div class="input-field col s12 m8 offset-m2"> 
@@ -22,7 +22,7 @@
 
             <div class="input-field col s12 m8 offset-m2">
               {{form.submit}}
-              <div class="btn waves-effect waves-light white-text waves-input-wrapper" style="">
+              <div class="btn waves-effect waves-light white-text waves-input-wrapper">
                 <a href="/signup" style="color:black">Sign Up</a>
                 </div>
             </div> 
