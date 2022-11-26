@@ -16,6 +16,15 @@ from App.controllers import (
 student_views = Blueprint("student_views", __name__, template_folder="../templates")
 
 
+# Lists all students
+@student_views.route("/api/students", methods=["GET"])
+@login_required
+def get_all_students_action():
+    students = get_all_students()
+    user = current_user
+    return render_template('students.html', user = user)
+
+
 # Create student given name, programme and faculty
 # Must be an admin to access this route
 @student_views.route("/api/students", methods=["POST"])
@@ -51,12 +60,7 @@ def update_student_action(student_id):
     return jsonify({"error": "unauthorized"}), 401
 
 
-# Lists all students
-@student_views.route("/api/students", methods=["GET"])
-@login_required
-def get_all_students_action():
-    students = get_all_students()
-    return render_template('students.html')
+
 
 
 # Gets a student given student id

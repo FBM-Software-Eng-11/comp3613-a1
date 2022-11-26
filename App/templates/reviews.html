@@ -1,55 +1,103 @@
 {% extends "layout.html" %}
-{% block title %} Reviews{% endblock %}
-{% block page %} Reviews{% endblock %}
+{% block title %}Reviews{% endblock %}
+{% block page %}Reviews{% endblock %}
 
 {{ super() }}
 
 {% block content %}
-  <div class="container">
-    <div class="row">
-      <form class="col s12 m8 offset-m2 card-panel" method="POST" action="/reviews">
-            
-            {{ form.csrf_token }}
 
-            <div class="input-field col s12 m8 offset-m2"> 
-                {{ form.studentId(size=200, class="validate materialize-textarea") }}
-                {{ form.studentId.label }}
-            </div>
+<label for="currentlyLoggedIn">Logged in As: {{user.username}} </label>
 
-            <div class="input-field col s12 m8 offset-m2"> 
-              {{ form.review(size=200, class="validate materialize-textarea") }}
-              {{ form.review.label }}
-            </div>
+<!-- <form id="reviewForm" class="col s12 m8 offset-m2" method="POST" action="/signup">
+    
+</form> -->
+<div style="border-style:solid; border-width: 6px; color:darkcyan; margin-top: 75px; margin-bottom: 75px; padding-left: 20px; padding-right: 20px;">
+  <div class="row" style="width: 890px;">
+    <form class="col s12">
 
-            <div class="input-field col s12 m8 offset-m2">
-              {{form.submit}}
-            </div> 
-        </form>
-    </div>
-    <div class="row">
-      <table>
-        <thead>
-          <tr>
-            <td>Review</td><td>karma</td><td>Actions</td>
-          </tr>
-        </thead>
-        <tbody>
-          {% for review in reviews %}
-            <tr>
-              <td>{{review.review}}</td>
-              <td>
-                {{review.karma}}
-              </td>
-              <td>
-                <a class="waves-effect waves-light btn" href="/editTodo/{{review.id}}">EDIT</a>
-              </td>
-            </tr>
-          {% endfor %}
-        <tbody>
-      </table>
-    </div>
-  </div>
+      <div class = "row">
+        <h5 style="align-items: center;">CREATE A REVIEW</h5>
+      </div>
         
+     
+
+      <div class="row">
+        <div class="student">
+
+          <label for="student">Select a Student</label>
+
+          <select name="student">
+            
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="reviewType">
+          
+          <label for="reviewType">Type of Review</label>
+          <a class="waves-effect green darken-2 btn-small">Positive</a>
+          <a class="waves-effect red btn-small">Negative</a>
+
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="reviewContents">
+          <label for="studentReview">Review</label>
+          <textarea id="studentReview" name="studentReview" rows="4" cols="50"></textarea>
+          <input type="submit" value="Submit">
+        </div>
+      </div>
+    </form>
   </div>
+</div>
+
+
+<div class="row">
+    <div class="col s12 m5">
+      <div class="card  cyan darken-1" id="card" >
+        <div class="card-content white-text">
+          <span class="card-title">Student Name - </span>
+          <span class="card-title">Karma - </span>
+          <span class="card-title">Review:</span>
+          <p>ReviewContents</p>
+        </div>
+        <div class="card-action">
+          <a href="#">Upvote</a>
+          <a href="#">Downvote</a>
+        </div>
+      </div>
+    </div>
+    <a class="waves-effect red darken-2 btn-small" style = "margin-top: 120px; margin-left: 65px;">DELETE REVIEW</a>
+  </div>
+
+
+
+  <style>
+    #card{
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .row label{
+      color: black;
+    }
+    .row input{
+      color: black;
+    }
+
+    select{
+      display: block;
+    }
+
+    h5 {
+      text-align: center;
+    }
+
+    
+
+  </style>
+
 
 {% endblock %}

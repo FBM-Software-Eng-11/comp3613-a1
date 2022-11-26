@@ -35,7 +35,7 @@ def reviews_page():
   if request.method == 'GET':
     user = current_user
     reviews = get_all_reviews()
-    return render_template('reviews_page.html', user = user)
+    return render_template('reviews.html', user = user)
 
 # Gets review given review id
 @review_views.route("/api/reviews/<int:review_id>", methods=["GET"])
