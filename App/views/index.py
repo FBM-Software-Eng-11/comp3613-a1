@@ -49,3 +49,9 @@ def reviews_page():
 
   if request.method == 'GET':
     return render_template('reviews_page.html')
+
+@index_views.route('/students', methods=['GET', 'POST'])
+def student_page():
+
+  if request.method == 'GET':
+    return render_template('students.html')
