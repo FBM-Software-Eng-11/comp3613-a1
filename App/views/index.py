@@ -13,18 +13,6 @@ def login_page():
   if request.method == 'GET':
     form = LogIn()
     return render_template("login.html", form=form)
-  
-  '''if request.method == "POST":
-    form = LogIn()
-    if form.validate_on_submit():
-        data = request.form
-        user = User.query.filter_by(username = data['username']).first()
-        if user and user.check_password(data['password']):
-          flash('Logged in successfully.')
-          login_user(user,True)
-          return redirect(const_url+"/identify")
-    flash('Invalid credentials')
-    return redirect(const_url+"/login")'''
 
 @index_views.route('/signup', methods=['GET', 'POST'])
 def signup_page():
@@ -42,21 +30,8 @@ def signup_page():
         return  redirect(const_url+"/signup")
       newuser = create_user(username=data['username'], password=data['password'])
       flash('Account Created!')
-      #form = LogIn()
       return redirect(const_url+"/login")
   flash('Error invalid input!')
   return  redirect(const_url+"/signup")
 
 
-@index_views.route('/reviews', methods=['GET', 'POST'])
-@login_required
-def reviews_page():
-  if request.method == 'GET':
-    user = current_user
-    return render_template('reviews_page.html', user = user)
-
-@index_views.route('/students', methods=['GET', 'POST'])
-@login_required
-def student_page():
-  if request.method == 'GET':
-    return render_template('students.html')

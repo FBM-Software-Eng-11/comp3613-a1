@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, render_template, request, send_from_directory, flash
+from flask_login import LoginManager, current_user, login_user, login_required, login_manager, login_required
 from flask_jwt import jwt_required, current_identity
 
 from App.controllers import (
@@ -27,13 +28,14 @@ def create_review_action():
     return jsonify({"error": "review not created"}), 400
 
 
-# List all reviews
-@review_views.route("/api/reviews", methods=["GET"])
-@jwt_required()
-def get_all_reviews_action():
+#list all reviews
+@review_views.route('/api/reviews', methods=['GET'])
+@login_required
+def reviews_page():
+  if request.method == 'GET':
+    user = current_user
     reviews = get_all_reviews()
-    return jsonify([review.to_json() for review in reviews]), 200
-
+    return render_template('reviews_page.html', user = user)
 
 # Gets review given review id
 @review_views.route("/api/reviews/<int:review_id>", methods=["GET"])

@@ -18,6 +18,7 @@ def get_user_page():
     users_list = [ user.to_json() for user in users ] 
     return jsonify({ "num_users": len(users_list), "users": users_list })
 
+#loggs in the user
 @user_views.route('/auth',methods=['POST'])
 def logsIn_user():
     data = request.form
@@ -27,9 +28,9 @@ def logsIn_user():
         form = LogIn()
         return render_template("login.html", form=form)
     login_user(user, remember=True)
-    return redirect(const_url+'/identify')
+    return redirect(const_url+'/api/reviews')
 
-
+#loggs out the user
 @user_views.route('/logout')
 @login_required
 def logout():
@@ -45,21 +46,6 @@ def identify_user_action():
             "message": f"username: {current_identity.username}, id : {current_identity.id}"
         }
     )
-
-
-# Sign up route
-@user_views.route("/api/users", methods=["POST"])
-def signup_action():
-    data = request.json
-    if get_user_by_username(data["username"]):
-        return jsonify({"message": "Username taken."}), 400
-    user = create_user(
-        username=data["username"], password=data["password"], access=data["access"]
-    )
-    if user:
-        return jsonify({"message": f"user {data['username']} created"}), 201
-    return jsonify({"message": "User not created"}), 400
-
 
 # Get all users route
 # Must be an admin to access this route

@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, render_template, request, send_from_directory, flash
 from flask_jwt import jwt_required, current_identity
+from flask_login import LoginManager, current_user, login_user, login_required, login_manager, login_required
 
 from App.controllers import (
     create_student,
@@ -52,12 +53,10 @@ def update_student_action(student_id):
 
 # Lists all students
 @student_views.route("/api/students", methods=["GET"])
-@jwt_required()
+@login_required
 def get_all_students_action():
     students = get_all_students()
-    if students:
-        return jsonify([student.to_json() for student in students]), 200
-    return jsonify({"error": "students not found"}), 404
+    return render_template('students.html')
 
 
 # Gets a student given student id
