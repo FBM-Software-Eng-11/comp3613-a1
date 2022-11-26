@@ -6,7 +6,6 @@ index_views = Blueprint("index_views", __name__, template_folder="../templates")
 
 from App.controllers import *
 
-const_url = "https://8080-fbmsoftwaree-comp3613a1-moaazqix6k3.ws-us77.gitpod.io"
 
 @index_views.route("/login", methods=["GET"])
 def login_page():
@@ -27,11 +26,12 @@ def signup_page():
       data = request.form
       if get_user_by_username(data["username"]):
         flash('Username already taken!') 
-        return  redirect(const_url+"/signup")
+        return render_template("signup.html", form=form)
       newuser = create_user(username=data['username'], password=data['password'])
       flash('Account Created!')
-      return redirect(const_url+"/login")
+      form = LogIn()
+      return render_template("login.html", form=form)
   flash('Error invalid input!')
-  return  redirect(const_url+"/signup")
+  return render_template("signup.html", form=form)
 
 
