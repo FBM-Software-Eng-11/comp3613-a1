@@ -34,6 +34,7 @@ class Review(db.Model):
                 )
             }
         )'''
+        
     def get_time(self):
         return self.date
      

@@ -8,6 +8,7 @@ from App.controllers import (
     get_all_reviews,
     update_review,
     delete_review,
+    create_vote
 )
 
 review_views = Blueprint("review_views", __name__, template_folder="../templates")
@@ -53,8 +54,8 @@ def get_review_action(review_id):
 def upvote_review_action(review_id,vote):
     review = get_review(review_id)
     if review :
-        review.vote(current_identity.id, vote)
-        return jsonify(review.to_json()), 200
+        vote = create_vote(review_id = review_id, voter_id = curent_identity.id, voteType = vote)
+        return jsonify(vote.to_json()), 200
     return jsonify({"error": "review not found"}), 404
 
 
