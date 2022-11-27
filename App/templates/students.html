@@ -70,7 +70,9 @@
           <td>{{student.faculty}}</td>
           <td>{{student.programme}}</td>
           <td>{{student.get_karma()}}</td>
-          <td> <a href="/delete/id" class="delete">Delete</a> </td>
+          {% if user.access == 2 %}
+            <td> <a href="/delete/id" class="delete">Delete</a> </td>
+          {% endif%}
         </tr>
       {% endfor %} 
       </table> 

@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<label for="currentlyLoggedIn">Logged in As: {{user.username}} </label>
+<label for="currentlyLoggedIn">Logged in As: {{current_user.username}} </label>
 
 <div class="row">
     <table>
@@ -15,14 +15,15 @@
           <th>Username</th>
           <th>Delete</th>
         </tr>
+      {% for user in users %}
         <tr>
-          <td>12345</td>
-          <td>Raul</td>
-          <td>Goindhan</td>
-          <td>raul@test.com</td>
-          <td> <a href="/delete/id" class="delete">Delete</a> </td>
+          <td>{{user.id}}</td>
+          <td>{{user.username}}</td>
+          {% if current_user.access == 2 %}
+            <td> <a href="/delete/id" class="delete">Delete</a> </td>
+          {% endif%}
         </tr>
-        
+      {% endfor %}   
       </table> 
   </div>
 

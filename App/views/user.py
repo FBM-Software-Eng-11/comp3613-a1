@@ -7,8 +7,6 @@ from .forms import SignUp, LogIn
 from App.controllers import *
 
 
-const_url = "https://8080-fbmsoftwaree-comp3613a1-moaazqix6k3.ws-us77.gitpod.io"
-
 user_views = Blueprint("user_views", __name__, template_folder="../templates")
 
 
@@ -22,7 +20,7 @@ def logsIn_user():
         form = LogIn()
         return render_template("login.html", form=form)
     login_user(user, remember=True)
-    return redirect(const_url+'/api/reviews')
+    return render_template('users.html', users =get_all_users(), current_user= current_user)
 
 #loggs out the user
 @user_views.route('/logout')
@@ -30,22 +28,13 @@ def logsIn_user():
 def logout():
     logout_user()
     flash ('You have been logged out')
-    return redirect('/')
+    return render_template("login.html", form=LogIn())
 
-#testing
-@user_views.route("/users", methods=["GET"])
-def get_user_page():
-    users = get_all_users()
-    user = current_user
-    return render_template("users.html", user = user)
-
-# Get all users route
+# List all users
 @user_views.route("/api/users", methods=["GET"])
 @login_required
 def get_users_action():
-    users = get_all_users_json()
-    user = current_user
-    return render_template('users.html', users = users, user= user)
+    return render_template('users.html', users =get_all_users(), current_user= current_user)
 
 
 # Get user by id route
