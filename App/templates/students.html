@@ -71,7 +71,7 @@
           <td>{{student.programme}}</td>
           <td>{{student.get_karma()}}</td>
           {% if user.access == 2 %}
-            <td> <a href="/delete/id" class="delete">Delete</a> </td>
+            <td> <a href="/api/students/delete/{{student.id}}" class="delete">Delete</a></td>
           {% endif%}
         </tr>
       {% endfor %} 
