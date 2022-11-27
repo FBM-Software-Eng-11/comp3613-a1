@@ -11,12 +11,6 @@ const_url = "https://8080-fbmsoftwaree-comp3613a1-moaazqix6k3.ws-us77.gitpod.io"
 
 user_views = Blueprint("user_views", __name__, template_folder="../templates")
 
-#testing
-@user_views.route("/users", methods=["GET"])
-def get_user_page():
-    users = get_all_users()
-    user = current_user
-    return render_template("users.html", user = user)
 
 #loggs in the user
 @user_views.route('/auth',methods=['POST'])
@@ -36,26 +30,22 @@ def logsIn_user():
 def logout():
     logout_user()
     flash ('You have been logged out')
-    return redirect(const_url+'/login')
+    return redirect('/')
 
-@user_views.route("/identify", methods=["GET"])
-@jwt_required()
-def identify_user_action():
-    return jsonify(
-        {
-            "message": f"username: {current_identity.username}, id : {current_identity.id}"
-        }
-    )
+#testing
+@user_views.route("/users", methods=["GET"])
+def get_user_page():
+    users = get_all_users()
+    user = current_user
+    return render_template("users.html", user = user)
 
 # Get all users route
-# Must be an admin to access this route
 @user_views.route("/api/users", methods=["GET"])
-@jwt_required()
+@login_required
 def get_users_action():
-    if current_identity.is_admin():
-        users = get_all_users_json()
-        return jsonify(users), 200
-    return jsonify({"message": "Access denied"}), 403
+    users = get_all_users_json()
+    user = current_user
+    return render_template('users.html', users = users, user= user)
 
 
 # Get user by id route
