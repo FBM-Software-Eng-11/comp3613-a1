@@ -74,13 +74,17 @@
           <p>{{review.text}}</p>
         </div>
         <div class="card-action">
-          <div>
-            {{review.get_num_upvotes()}}
-            <a href="#">Upvote</a>
+          <div style="padding-bottom: 10px;">
+            <form method="post" action="/api/reviews/{{review.id}}/vote/up">
+              {{review.get_num_upvotes()}}
+              <button type="submit"> Upvote    </button>
+            </form>
           </div>
           <div> 
-            {{review.get_num_downvotes()}}
-            <a href="#">Downvote</a>
+            <form method="post" action="/api/reviews/{{review.id}}/vote/down">
+              {{review.get_num_downvotes()}}
+              <button type="submit"> Downvote </button>
+            </form>
           </div>
          
         </div>

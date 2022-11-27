@@ -238,11 +238,6 @@ class ReviewIntegrationTests(unittest.TestCase):
         review_json = get_review_json(test_review.id)
         assert review_json == test_review.to_json()
 
-    def test_get_all_reviews_json(self):
-        reviews = get_all_reviews()
-        reviews_json = get_all_reviews_json()
-        assert reviews_json == [review.to_json() for review in reviews]
-
     def test_review_get_karma(self):
         with self.subTest("No votes"):
             review = Review(1, 1, "good", "positive")

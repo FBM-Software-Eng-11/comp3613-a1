@@ -13,26 +13,11 @@ class Votes(db.Model):
         self.voter_id = voter_id
         self.voteType = voteType
         self.date = datetime.now()
-
-    # def addUpVote(self, rev_id):
-    #     vote = Votes.query.filter_by(review_id=rev_id).first()
-    #     vote.upvotes = vote.upvotes + 1
-    
-    # def removeUpVote(self, rev_id):
-    #     vote = Votes.query.filter_by(review_id=rev_id).first()
-    #     vote.upvotes = votes.upvotes - 1
-    
-    # def addDownVote(self, rev_id):
-    #     vote = Votes.query.filter_by(review_id=rev_id).first()
-    #     vote.downvotes = vote.downvotes + 1
-    
-    # def removeDownVote(self, rev_id):
-    #     vote = Votes.query.filter_by(review_id=rev_id).first()
-    #     vote.upvotes = vote.downvotes - 1
-
-    # def to_json(self):
-    #     return {"id": self.id, 
-    #     "review_id": self.review_id, 
-    #     "upvotes": self.upvotes,
-    #     "downvotes": self.downvotes
-    #     }
+        
+    def to_json(self):
+        return {"id": self.id, 
+        "review_id": self.review_id, 
+        "voter_id": self.voter_id,
+        "vote_type": self.voteType,
+        "date":self.date
+        }
