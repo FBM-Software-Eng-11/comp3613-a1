@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, redirect, render_template, request, send_from_directory, flash
 from flask_jwt import jwt_required, current_identity
 from flask_login import LoginManager, current_user, login_user, login_required, login_manager, login_required
-
+from App.models import *
 from App.controllers import (
     create_student,
     get_student,
@@ -21,24 +21,24 @@ student_views = Blueprint("student_views", __name__, template_folder="../templat
 @login_required
 def get_all_students_action():
     students = get_all_students()
-    user = current_user
-    return render_template('students.html', user = user)
+    return render_template('students.html', user = current_user, students = get_all_students())
 
 
 # Create student given name, programme and faculty
 # Must be an admin to access this route
 @student_views.route("/api/students", methods=["POST"])
-@jwt_required()
+@login_required
 def create_student_action():
-    if current_identity.is_admin():
-        data = request.json
+    if current_user.is_admin():
+        data = request.form
         student = create_student(
-            name=data["name"], programme=data["programme"], faculty=data["faculty"]
+            name=data["studentFirstName"] +" " +data["studentLastName"], programme=data["studentProgramme"], faculty=data["studentFaculty"]
         )
         if student:
-            return jsonify(student.to_json()), 201
-        return jsonify({"error": "student not created"}), 400
-    return jsonify({"error": "unauthorized"}), 401
+            flash('Student Created!')
+            return render_template('students.html', user = current_user, students = get_all_students())
+        flash('Error Creating Student!')
+        return render_template('students.html', user = current_user, students = get_all_students())
 
 
 # Updates student given student id, name, programme and faculty

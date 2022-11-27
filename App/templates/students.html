@@ -6,84 +6,73 @@
 
 {% block content %}
 
-<label for="currentlyLoggedIn">Logged in As: {{user.username}} </label>
+<label for="currentlyLoggedIn">Logged in As: {{user.username}}</label>
 
-<!-- <form id="reviewForm" class="col s12 m8 offset-m2" method="POST" action="/signup">
-    
-</form> -->
-<div style="border-style:solid; border-width: 6px; color:darkcyan; margin-top: 75px; margin-bottom: 75px; padding-left: 20px; padding-right: 20px;">
-  <div class="row" style="width: 890px;">
-    <form class="col s12">
+{% if user.access == 2 %}
+  <div style="border-style:solid; border-width: 6px; color:darkcyan; margin-top: 50px; margin-bottom: 75px; padding-left: 20px; padding-right: 20px;">
+    <div class="row" style="width: 890px;">
 
-      <div class = "row">
-        <h5 style="align-items: center;">Add a Student</h5>
-      </div>
-        
-      <div class="row">
-        <div class="reviewContents">
-          <label for="studentFirstName">First Name</label>
-          <input id="studentFirstName" name="studentFirstName"/>
+      <form class="col s12" method="POST" action="/api/students">
+
+        <div class = "row">
+          <h5 style="align-items: center;">Add a Student</h5>
+        </div>
           
-        </div>
+        <div class="row">
+          <div class="reviewContents">
+            <label for="studentFirstName">First Name</label>
+            <input id="studentFirstName" name="studentFirstName"/>
+          </div>
         </div>
 
-        
         <div class="row">
             <div class="student">
               <label for="studentLastName">Last Name</label>
               <input id="studentLasttName" name="studentLastName" />
-              
             </div>
         </div>
-        
+          
         <div class="row">
-        <div class="reviewContents">
-          <label for="studentID">Review</label>
-          <input id="studentID" name="studentID"/>
-        </div>
+          <div class="reviewContents">
+            <label for="studentFaculty">Faculty</label>
+            <input id="studentFaculty" name="studentFaculty"/>
+          </div>
         </div>
 
-
-      <div class="row">
-        <div class="reviewContents">
-          <label for="studentFaculty">Faculty</label>
-          <input id="studentFaculty" name="studentFaculty"/>
-        
+        <div class="row">
+          <div class="reviewContents">
+            <label for="studentProgramme">Programme</label>
+            <input id="studentProgramme" name="studentProgramme"/>
+            <input type="submit" value="Submit">
+          </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="reviewContents">
-          <label for="studentProgramme">Programme</label>
-          <input id="studentProgramme" name="studentProgramme"/>
-          <input type="submit" value="Submit">
-        </div>
-      </div>
-
-    </form>
+      </form>
+    </div>
   </div>
-</div>
+
+{% endif %}
 
 
 <div class="row">
     <table>
         <tr>
           <th>Student ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
+          <th>Name</th>
           <th>Faculty</th>
-          <th>Program</th>
+          <th>Programme</th>
           <th>Karma</th>
           <th>Delete</th>
         </tr>
+      {% for student in students %}
         <tr>
-          <td>12345</td>
-          <td>Raul</td>
-          <td>Goindhan</td>
-          <td>raul@test.com</td>
+          <td>{{student.id}}</td>
+          <td>{{student.name}}</td>
+          <td>{{student.faculty}}</td>
+          <td>{{student.programme}}</td>
+          <td>{{student.get_karma()}}</td>
           <td> <a href="/delete/id" class="delete">Delete</a> </td>
         </tr>
-        
+      {% endfor %} 
       </table> 
   </div>
 
