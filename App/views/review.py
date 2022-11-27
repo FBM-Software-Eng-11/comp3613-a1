@@ -75,15 +75,18 @@ def update_review_action(review_id):
 
 # Deletes post given post id
 # Only admins or the original reviewer can delete a review
-@review_views.route("/api/reviews/<int:review_id>", methods=["DELETE"])
-@jwt_required()
+@review_views.route("/api/reviews/delete/<int:review_id>")
+@login_required
 def delete_review_action(review_id):
     review = get_review(review_id)
     if review:
-        if current_identity.id == review.user_id or current_identity.is_admin():
-            delete_review(review_id)
-            return jsonify({"message": "post deleted successfully"}), 200
+        if current_user.id == review.user_id or current_user.is_admin():
+            delete_review(review.id)
+            flash("Review Deleted")
+            return render_template('reviews.html', user = current_user, students = get_all_students(), reviews=get_all_reviews())
         else:
-            return jsonify({"error": "Access denied"}), 403
-    return jsonify({"error": "review not found"}), 404
+            flash("Review Not deleted")
+            return render_template('reviews.html', user = current_user, students = get_all_students(), reviews=get_all_reviews())
+    flash("Review Not found")
+    return render_template('reviews.html', user = current_user, students = get_all_students(), reviews=get_all_reviews())
 

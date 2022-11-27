@@ -90,7 +90,9 @@
         </div>
       </div>
     </div>
-    <a class="waves-effect red darken-2 btn-small" style = "margin-top: 120px; margin-left: 65px;">DELETE REVIEW</a>
+    <form method="delete" action="/api/reviews/delete/{{review.id}}">
+      <button class="waves-effect red darken-2 btn-small" style = "margin-top: 120px; margin-left: 65px;" type="submit"> DELETE REVIEW </button>
+    </form>
   </div>
   {% endfor %}
 
