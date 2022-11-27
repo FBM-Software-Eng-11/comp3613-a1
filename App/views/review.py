@@ -2,41 +2,35 @@ from flask import Blueprint, jsonify, request, redirect, render_template, reques
 from flask_login import LoginManager, current_user, login_user, login_required, login_manager, login_required
 from flask_jwt import jwt_required, current_identity
 
-from App.controllers import (
-    create_review,
-    get_review,
-    get_all_reviews,
-    update_review,
-    delete_review,
-    create_vote
-)
+from App.controllers import *
 
 review_views = Blueprint("review_views", __name__, template_folder="../templates")
-
-
-# Create review given user id, student id and text
-@review_views.route("/api/reviews", methods=["POST"])
-@jwt_required()
-def create_review_action():
-    data = request.json
-    review = create_review(
-        user_id=data["user_id"], student_id=data["student_id"], text=data["text"]
-    )
-
-    if review:
-        return jsonify(review.to_json()), 201
-
-    return jsonify({"error": "review not created"}), 400
-
 
 #list all reviews
 @review_views.route('/api/reviews', methods=['GET'])
 @login_required
 def reviews_page():
-  if request.method == 'GET':
-    user = current_user
     reviews = get_all_reviews()
-    return render_template('reviews.html', user = user)
+    return render_template('reviews.html', user = current_user, students = get_all_students(), reviews=get_all_reviews())
+
+# Create review given user id, student id and text
+@review_views.route("/api/reviews", methods=["POST"])
+@login_required
+def create_review_action():
+    data = request.form
+    review = create_review(
+        user_id=current_user.id, student_id=data["student"], text=data["studentReview"], reviewType= data["reviewType"]
+    )
+
+    if review:
+        flash('Review Created!')
+        return render_template('reviews.html', user= current_user, studens = get_all_students(), reviews=get_all_reviews())
+    flash("Error Creating Review!")
+    return render_template('reviews.html', user= current_user, studens = get_all_students(), reviews=get_all_reviews())
+
+
+
+
 
 # Gets review given review id
 @review_views.route("/api/reviews/<int:review_id>", methods=["GET"])

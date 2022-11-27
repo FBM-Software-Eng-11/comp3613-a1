@@ -13,21 +13,22 @@
 </form> -->
 <div style="border-style:solid; border-width: 6px; color:darkcyan; margin-top: 75px; margin-bottom: 75px; padding-left: 20px; padding-right: 20px;">
   <div class="row" style="width: 890px;">
-    <form class="col s12">
+
+    <form class="col s12" method="POST" action="/api/reviews">
 
       <div class = "row">
         <h5 style="align-items: center;">CREATE A REVIEW</h5>
       </div>
         
-     
-
       <div class="row">
         <div class="student">
 
           <label for="student">Select a Student</label>
 
           <select name="student">
-            
+            {% for student in students%}
+              <option value="{{student.id}}">{{student.name}}</option>
+            {% endfor %}
           </select>
         </div>
       </div>
@@ -36,25 +37,21 @@
         <div class="reviewType">
           
           <label for="reviewType">Type of Review</label>
-          <div class="switch">
-            <label>
-              <input type="checkbox">
-              <span class="lever"></span>
-              Positive
-            </label>
-          </div>
-          
-          <div class="switch">
-            <label>
-              <input type="checkbox">
-              <span class="lever"></span>
-              Negative
-            </label>
-          </div>
+            <p>
+              <label>
+                <input name="reviewType" value="positive" type="radio" checked />
+                <span>Positive</span>
+              </label>
+            </p>
+            <p>
+              <label>
+                <input name="reviewType" value="negative" type="radio" />
+                <span>Negative</span>
+              </label>
+            </p>
 
         </div>
       </div>
-
 
       <div class="row">
         <div class="reviewContents">
@@ -67,24 +64,31 @@
   </div>
 </div>
 
-
+{% for review, student in reviews %}
 <div class="row">
     <div class="col s12 m5">
       <div class="card  cyan darken-1" id="card" >
         <div class="card-content white-text">
-          <span class="card-title">Student Name - </span>
-          <span class="card-title">Karma - </span>
+          <span class="card-title">Student Name - {{student.name}}</span>
           <span class="card-title">Review:</span>
-          <p>ReviewContents</p>
+          <p>{{review.text}}</p>
         </div>
         <div class="card-action">
-          <a href="#">Upvote</a>
-          <a href="#">Downvote</a>
+          <div>
+            {{review.get_num_upvotes()}}
+            <a href="#">Upvote</a>
+          </div>
+          <div> 
+            {{review.get_num_downvotes()}}
+            <a href="#">Downvote</a>
+          </div>
+         
         </div>
       </div>
     </div>
     <a class="waves-effect red darken-2 btn-small" style = "margin-top: 120px; margin-left: 65px;">DELETE REVIEW</a>
   </div>
+  {% endfor %}
 
 
 

@@ -59,7 +59,7 @@ def get_review_json(id):
 
 # Returns all reviews in the database
 def get_all_reviews():
-    return Review.query.all()
+    return db.session.query(Review,Student).join(Student).all()
 
 
 # Returns all reviews as a json object
