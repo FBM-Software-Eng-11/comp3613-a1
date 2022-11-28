@@ -20,7 +20,7 @@
           <td>{{user.id}}</td>
           <td>{{user.username}}</td>
           {% if current_user.access == 2 %}
-            <td> <a href="/delete/id" class="delete">Delete</a> </td>
+            <td> <a href="/api/users/delete/{{user.id}}" class="delete">Delete</a> </td>
           {% endif%}
         </tr>
       {% endfor %}   
