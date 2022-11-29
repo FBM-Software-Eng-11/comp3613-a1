@@ -14,11 +14,24 @@ def reviews_page():
     reviews = get_all_reviews()
     return render_template('reviews.html', user = current_user, students = get_all_students(), reviews=get_all_reviews())
 
-@review_views.route('/api/reviews/<int:studentId>', methods=['GET'])
+@review_views.route('/api/reviews/student/<int:studentId>', methods=['GET'])
 @login_required
 def getReviewsByStudent(studentId):
     reviews = get_reviews_by_student(studentId)
     return render_template('singleStudentReviews.html', user = current_user, student = get_student(studentId), reviews=get_reviews_by_student(studentId))
+
+@review_views.route('/api/reviews/user/<int:userId>', methods=['GET'])
+@login_required
+def getReviewsByUser(userId):
+    reviews = get_reviews_by_user(userId)
+    students = get_all_students()
+    allStudents = []
+    for review in reviews:
+        for student in students:
+            if review.student_id == student.id:
+                allStudents.append(student)
+                print(student.name)
+    return render_template('userReviews.html', user = current_user, students = allStudents, reviews= reviews)
 
 # Create review given user id, student id and text
 @review_views.route("/api/reviews", methods=["POST"])

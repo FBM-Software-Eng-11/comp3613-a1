@@ -13,7 +13,10 @@
         <tr>
           <th>User ID</th>
           <th>Username</th>
-          <th>Delete</th>
+          {% if current_user.access == 2 %}
+            <th>Delete</th>
+            {% endif%}
+          <th>User reviews</th>
         </tr>
       {% for user in users %}
         <tr>
@@ -22,6 +25,7 @@
           {% if current_user.access == 2 %}
             <td> <a href="/api/users/delete/{{user.id}}" class="delete">Delete</a> </td>
           {% endif%}
+          <td><a href="/api/reviews/user/{{user.id}}">View all user reviews</a></td>
         </tr>
       {% endfor %}   
       </table> 
