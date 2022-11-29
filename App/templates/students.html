@@ -61,7 +61,10 @@
           <th>Faculty</th>
           <th>Programme</th>
           <th>Karma</th>
-          <th>Delete</th>
+          {% if user.access == 2 %}
+            <th>Delete</th>
+          {% endif%}
+          <th>Student Reviews</th>
         </tr>
       {% for student in students %}
         <tr>
@@ -73,6 +76,7 @@
           {% if user.access == 2 %}
             <td> <a href="/api/students/delete/{{student.id}}" class="delete">Delete</a></td>
           {% endif%}
+          <td> <a href="/api/reviews/{{student.id}}" > View all reviews</a></td>
         </tr>
       {% endfor %} 
       </table> 

@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block title %}Reviews{% endblock %}
+{% block page %}Reviews{% endblock %}
+
+{{ super() }}
+
+{% block content %}
+
+<label for="currentlyLoggedIn">Logged in As: {{user.username}} </label>
+
+<!-- <form id="reviewForm" class="col s12 m8 offset-m2" method="POST" action="/signup">
+    
+</form> -->
+<div style="border-style:solid; border-width: 6px; color:darkcyan; margin-top: 75px; margin-bottom: 75px; padding-left: 20px; padding-right: 20px;">
+  <div class="row" style="width: 890px;">
+
+{% for review in reviews %}
+<div class="row">
+    <div class="col s12 m5">
+      <div class="card  cyan darken-1" id="card" >
+        <div class="card-content white-text">
+          <span class="card-title">Student Name - {{student.name}}</span>
+          <span class="card-title">Review:</span>
+          <p>{{review.text}}</p>
+        </div>
+        <div class="card-action">
+          <div style="padding-bottom: 10px;">
+            <form method="post" action="/api/singleReviews/{{review.id}}/vote/up/{{student.id}}">
+              {{review.get_num_upvotes()}}
+              <button type="submit"> Upvote    </button>
+            </form>
+          </div>
+          <div> 
+            <form method="post" action="/api/singleReviews/{{review.id}}/vote/down/{{student.id}}">
+              {{review.get_num_downvotes()}}
+              <button type="submit"> Downvote </button>
+            </form>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+    {% if user.access == 2 or user.id == review.user_id%}
+    <form method="delete" action="/api/reviews/delete/{{review.id}}">
+      <button class="waves-effect red darken-2 btn-small" style = "margin-top: 120px; margin-left: 65px;" type="submit"> DELETE REVIEW </button>
+    </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+
+
+  <style>
+    #card{
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .row label{
+      color: black;
+    }
+    .row input{
+      color: black;
+    }
+
+    select{
+      display: block;
+    }
+
+    h5 {
+      text-align: center;
+    }
+
+    
+
+  </style>
+
+
+{% endblock %}
