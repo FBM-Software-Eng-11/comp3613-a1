@@ -104,6 +104,17 @@ class ReviewUnitTests(unittest.TestCase):
                     
                 },
              )
+    def test_review_get_karma(self):
+        review = Review(1, 1, "good","positive")
+        assert review.get_review_karma() == 20
+
+    def test_review_get_upvotes(self):
+        review = Review(1, 1, "good","positive")
+        assert review.get_num_upvotes() == 0
+
+    def test_review_get_downvotes(self):
+        review = Review(1, 1, "good","positive")
+        assert review.get_num_downvotes() == 0
 
 # Unit tests for Votes Model
 class VotesUnitTests(unittest.TestCase):
@@ -180,10 +191,7 @@ class StudentIntegrationTests(unittest.TestCase):
         students = get_all_students()
         students_json = get_all_students_json()
         assert students_json == [student.to_json() for student in students]
-
   
-
-    # tests updating a student's name, programme and/or faculty
     def test_update_student(self):
         with self.subTest("Update name"):
             student = create_student("bob", "fst", "cs")
@@ -209,6 +217,8 @@ class StudentIntegrationTests(unittest.TestCase):
         sid = student.id
         delete_student(sid)
         assert get_student(sid) is None
+
+    
 
 # Integration tests for Review model
 class ReviewIntegrationTests(unittest.TestCase):
