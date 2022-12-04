@@ -9,6 +9,26 @@ from App.controllers import *
 
 user_views = Blueprint("user_views", __name__, template_folder="../templates")
 
+@user_views.route('/signup', methods=['GET', 'POST'])
+def signup_page():
+
+  if request.method == 'GET':
+    form = SignUp() 
+    return render_template('signup.html', form=form) 
+  
+  if request.method == 'POST':
+    form = SignUp() 
+    if form.validate_on_submit():
+      data = request.form
+      if get_user_by_username(data["username"]):
+        flash('Username already taken!') 
+        return render_template("signup.html", form=form)
+      newuser = create_user(username=data['username'], password=data['password'])
+      flash('Account Created!')
+      form = LogIn()
+      return render_template("login.html", form=form)
+  flash('Error invalid input!')
+  return render_template("signup.html", form=form)
 
 #loggs in the user
 @user_views.route('/auth',methods=['POST'])
@@ -22,7 +42,7 @@ def logsIn_user():
     login_user(user, remember=True)
     return render_template('users.html', users =get_all_users(), current_user= current_user)
 
-#loggs out the user
+#logs out the user
 @user_views.route('/logout')
 @login_required
 def logout():

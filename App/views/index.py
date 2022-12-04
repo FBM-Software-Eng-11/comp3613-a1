@@ -20,25 +20,5 @@ def create_admin():
   form = LogIn()
   return render_template("login.html", form=form)
 
-@index_views.route('/signup', methods=['GET', 'POST'])
-def signup_page():
-
-  if request.method == 'GET':
-    form = SignUp() 
-    return render_template('signup.html', form=form) 
-  
-  if request.method == 'POST':
-    form = SignUp() 
-    if form.validate_on_submit():
-      data = request.form
-      if get_user_by_username(data["username"]):
-        flash('Username already taken!') 
-        return render_template("signup.html", form=form)
-      newuser = create_user(username=data['username'], password=data['password'])
-      flash('Account Created!')
-      form = LogIn()
-      return render_template("login.html", form=form)
-  flash('Error invalid input!')
-  return render_template("signup.html", form=form)
 
 

@@ -49,16 +49,6 @@ def create_review_action():
     return render_template('reviews.html', user= current_user, studens = get_all_students(), reviews=get_all_reviews())
 
 
-# Gets review given review id
-@review_views.route("/api/reviews/<int:review_id>", methods=["GET"])
-@jwt_required()
-def get_review_action(review_id):
-    review = get_review(review_id)
-    if review:
-        return jsonify(review.to_json()), 200
-    return jsonify({"error": "review not found"}), 404
-
-
 # Votes on a post given post id and user id
 @review_views.route("/api/reviews/<int:review_id>/vote/<string:vote>", methods=["POST"])
 @login_required
@@ -88,21 +78,6 @@ def vote_single_student_review_page(review_id,vote, studentId):
         return render_template('singleStudentReviews.html', user = current_user, student = get_student(studentId), reviews=get_reviews_by_student(studentId))
     flash('Error Voting!')
     return render_template('singleStudentReviews.html', user = current_user, student = get_student(studentId), reviews=get_reviews_by_student(studentId))
-
-# Updates post given post id and new text
-# Only admins or the original reviewer can edit a review
-@review_views.route("/api/reviews/<int:review_id>", methods=["PUT"])
-@jwt_required()
-def update_review_action(review_id):
-    data = request.json
-    review = get_review(review_id)
-    if review:
-        if current_identity.id == review.user_id or current_identity.is_admin():
-            update_review(review_id, text=data["text"])
-            return jsonify({"message": "post updated successfully"}), 200
-        else:
-            return jsonify({"error": "Access denied"}), 403
-    return jsonify({"error": "review not found"}), 404
 
 
 # Deletes post given post id
